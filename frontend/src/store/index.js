@@ -3,6 +3,9 @@ import { createStore } from 'vuex'
 
 export default createStore({
   state: {
+    isAuthenticated: false,
+    token: localStorage.getItem('token') || '',
+    username: localStorage.getItem('username') || '',
     selectedNavbarItem: localStorage.getItem('selectedNavbarItem') || ''
   },
   getters: {

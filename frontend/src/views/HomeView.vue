@@ -24,7 +24,7 @@
                 It's easy, simple, effective, and reliable
               </p>
               <div class="text-center mt-5">
-                <button type="button" class="custom-button">Start now</button>
+                <button type="button" class="custom-button-light">Start now</button>
               </div>
             </div>
           </div>
@@ -57,19 +57,3 @@ export default {
   methods: {},
 };
 </script>
-
-<style scoped>
-.custom-button {
-  background-color: white;
-  width: 200px;
-  color: black;
-  border-radius: 100px;
-  border: none;
-  padding: 10px 20px;
-  transition: background-color 0.3s ease;
-}
-
-.custom-button:hover {
-  background-color: #9c9c9c;
-}
-</style>

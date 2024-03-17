@@ -58,6 +58,7 @@
           </div>
           <div class="col-auto d-flex align-items-center">
             <div v-show="isLoggedOff">
+              Log In
               <a
                 href="login"
                 data-bs-toggle="tooltip"
