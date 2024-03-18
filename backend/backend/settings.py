@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     
     'database_handler',
     'dl_model',
@@ -45,6 +46,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'djoser',
 ]
+
+SITE_ID = 1
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -90,7 +93,7 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
-    "http://10.188.95.64:8080"
+    "http://10.206.0.159:8080"
 ]
 
 ROOT_URLCONF = 'backend.urls'

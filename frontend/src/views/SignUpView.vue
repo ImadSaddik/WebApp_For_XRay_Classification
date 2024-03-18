@@ -28,7 +28,7 @@
             @click="showAlertDialog = false"
           ></button>
         </div>
-        <form @submit.prevent="submitForm">
+        <form v-if="!hideForm" @submit.prevent="submitForm">
           <div class="input-group input-group-sm mb-3">
             <input
               type="text"
@@ -79,10 +79,16 @@
             />
           </div>
           <p class="text-dark-emphasis">
-            Or <a href="/login">Click here</a>, if you already have an account.
+            Or <router-link to="/login">Click here</router-link>, if you already have an account.
           </p>
           <button type="submit" class="custom-button-dark mt-3">Create account</button>
         </form>
+
+        <div v-if="hideForm">
+          <p class="text-dark-emphasis">
+            Account created successfully. Please check your email to verify your account.
+          </p>
+        </div>
       </div>
     </div>
   </section>
@@ -105,6 +111,7 @@ export default {
       repeatPassword: "",
       showHidePassword: true,
       showAlertDialog: false,
+      hideForm: false,
       errors: [],
     };
   },
@@ -115,8 +122,10 @@ export default {
       }
 
       const formData = {
-        username: this.username,
+        name: this.username,
+        email: this.email,
         password: this.password,
+        re_password: this.repeatPassword,
       };
 
       axios.defaults.headers.common.Authorization = "";
@@ -125,7 +134,7 @@ export default {
         .then((response) => {
           this.errors = [];
           this.showAlertDialog = false;
-          this.$router.push("/login");
+          this.hideForm = true;
           console.log("successfully signed up");
         })
         .catch((error) => {

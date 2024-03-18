@@ -1,13 +1,13 @@
 <template>
   <nav class="navbar navbar-expand-lg bg-body-tertiary" style="height: 56px">
     <div class="container-fluid px-sm-5">
-      <a
+      <router-link
         class="navbar-brand"
-        href="/"
+        to="/"
         @click="handleNavbarItemClick(HOME_PAGE)"
       >
         <img src="../assets/apod_logo.svg" alt="" />
-      </a>
+      </router-link>
       <button
         class="navbar-toggler"
         type="button"
@@ -22,45 +22,45 @@
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="row w-100 navbar-nav">
           <div class="col d-lg-flex align-items-center">
-            <a
+            <router-link
               class="nav-link ms-5"
               :class="{ 'fw-bold': getSelectedNavbarItem === HOME_PAGE }"
-              href="/"
+              to="/"
               @click="handleNavbarItemClick(HOME_PAGE)"
             >
               Home
-            </a>
-            <a
+            </router-link>
+            <router-link
               class="nav-link ms-3"
               :class="{ 'fw-bold': getSelectedNavbarItem === PREDICT_PAGE }"
-              href="/predict"
+              to="/predict"
               @click="handleNavbarItemClick(PREDICT_PAGE)"
             >
               Predict
-            </a>
-            <a
+            </router-link>
+            <router-link
               class="nav-link ms-3"
               :class="{ 'fw-bold': getSelectedNavbarItem === GALLERY_PAGE }"
-              href="/gallery"
+              to="/gallery"
               @click="handleNavbarItemClick(GALLERY_PAGE)"
             >
               Gallery
-            </a>
-            <a
+            </router-link>
+            <router-link
               class="nav-link ms-3"
               :class="{ 'fw-bold': getSelectedNavbarItem === REPORT_PAGE }"
-              href="/report"
+              to="/report"
               @click="handleNavbarItemClick(REPORT_PAGE)"
             >
               Report
-            </a>
+            </router-link>
             <hr class="d-block d-lg-none" />
           </div>
           <div class="col-auto d-flex align-items-center">
             <div v-show="isLoggedOff">
               Log In
-              <a
-                href="login"
+              <router-link
+                to="/login"
                 data-bs-toggle="tooltip"
                 data-bs-placement="bottom"
                 data-bs-title="Log in"
@@ -71,10 +71,10 @@
                   class="ms-3 fa-solid fa-arrow-right-to-bracket fa-lg"
                   style="color: #000"
                 ></i>
-              </a>
+              </router-link>
             </div>
             <div v-show="!isLoggedOff">
-              {{ getUsername }}
+              {{ getEmail }}
               <a
                 data-bs-toggle="tooltip"
                 data-bs-placement="bottom"
@@ -104,8 +104,8 @@ export default {
     isLoggedOff() {
       return this.$store.state.token === "";
     },
-    getUsername() {
-      return this.$store.state.username;
+    getEmail() {
+      return this.$store.state.email;
     },
     getSelectedNavbarItem() {
       return this.$store.state.selectedNavbarItem;
@@ -130,10 +130,10 @@ export default {
       axios.defaults.headers.common.Authorization = "";
 
       localStorage.removeItem("token");
-      localStorage.removeItem("username");
+      localStorage.removeItem("email");
 
       this.$store.commit("removeToken");
-      this.$store.commit("removeUsername");
+      this.$store.commit("removeEmail");
     },
     handleNavbarItemClick(item) {
       localStorage.setItem("selectedNavbarItem", item);

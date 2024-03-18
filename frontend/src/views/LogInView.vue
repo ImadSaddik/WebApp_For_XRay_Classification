@@ -28,10 +28,10 @@
         <form @submit.prevent="submitForm">
           <div class="input-group input-group-sm mb-3">
             <input
-              type="text"
+              type="email"
               class="form-control rounded-3 py-2 px-3"
-              placeholder="Your username"
-              v-model="username"
+              placeholder="Your Email"
+              v-model="email"
             />
           </div>
           <div class="input-group input-group-sm mb-3">
@@ -57,10 +57,10 @@
             />
           </div>
           <p class="text-dark-emphasis">
-            Forgot password? <a href="/reset_password">Click here</a>
+            Forgot password? <router-link to="/reset_password">Click here</router-link>
           </p>
           <p class="text-dark-emphasis">
-            Or <a href="/signup">Click here</a>, if you don't have an account.
+            Or <router-link to="/signup">Click here</router-link>, if you don't have an account.
           </p>
           <button type="submit" class="custom-button-dark mt-3">Log In</button>
         </form>
@@ -70,6 +70,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: "LogInView",
   components: {},
@@ -78,7 +80,7 @@ export default {
   },
   data() {
     return {
-      username: "",
+      email: "",
       password: "",
       showHidePassword: true,
       showAlertDialog: false,
@@ -91,21 +93,21 @@ export default {
       localStorage.removeItem("token");
 
       const formData = {
-        username: this.username,
+        email: this.email,
         password: this.password,
       };
 
       await axios
-        .post("/api/v1/token/login", formData)
+        .post("/api/v1/jwt/create", formData)
         .then((response) => {
-          const token = response.data.auth_token;
+          const token = response.data.access;
           axios.defaults.headers.common.Authorization = "Token " + token;
 
           localStorage.setItem("token", token);
           this.$store.dispatch("login", token);
 
-          localStorage.setItem("username", this.username);
-          this.$store.commit("setUsername", this.username);
+          localStorage.setItem("email", this.email);
+          this.$store.commit("setEmail", this.email);
 
           localStorage.setItem("selectedNavbarItem", "home");
           this.$store.commit("setSelectedNavbarItem", "home");
@@ -116,7 +118,7 @@ export default {
         .catch((error) => {
           console.log(error);
           this.showAlertDialog = true;
-          this.errorMessage = "Invalid username or password.";
+          this.errorMessage = "Invalid email or password.";
         });
     },
   },
