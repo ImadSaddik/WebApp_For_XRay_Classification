@@ -74,7 +74,16 @@ import axios from 'axios';
 
 export default {
   name: "LogInView",
-  components: {},
+  computed: {
+    isLoggedOff() {
+      return this.$store.state.token === "";
+    },
+  },
+  created() {
+    if (!this.isLoggedOff) {
+      this.$router.push({ name: "home", replace: true });
+    }
+  },
   mounted() {
     document.title = "Log In";
   },
