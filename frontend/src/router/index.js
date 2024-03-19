@@ -5,6 +5,7 @@ import SignUpView from '@/views/SignUpView.vue'
 import ActivateAccountView from '@/views/ActivateAccountView.vue'
 import ResetPasswordView from '@/views/ResetPasswordView.vue'
 import ResetPasswordConfirmationView from '@/views/ResetPasswordConfirmationView.vue'
+import PredictView from '@/views/PredictView.vue'
 
 const routes = [
   {
@@ -36,6 +37,11 @@ const routes = [
     path: '/password/reset/confirm/:uid/:token',
     name: 'reset_password_confirm',
     component: ResetPasswordConfirmationView
+  },
+  {
+    path: '/predict',
+    name: 'predict',
+    component: PredictView
   }
 ]
 
