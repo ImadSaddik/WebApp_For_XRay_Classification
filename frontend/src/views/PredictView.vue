@@ -19,17 +19,26 @@
       >
         <div
           v-if="!imageUploaded"
-          class="col-4 border border-3 rounded-4 d-flex align-items-center justify-content-center"
-          style="height: 60vh"
+          class="col-4 p-0 border border-3 rounded-4 position-relative d-flex flex-column"
         >
-          <i class="fa-solid fa-file-image fa-2xl text-dark-emphasis"></i>
+          <div>
+            <img
+              src="../assets/white_background.jpeg"
+              class="img-fluid rounded-4"
+              alt="Uploaded image"
+              style="width: 100%; height: 100%; object-fit: cover;"
+            />
+          </div>
+          <div class="position-absolute top-50 start-50 translate-middle">
+            <i class="fa-solid fa-file-image fa-2xl text-dark-emphasis"></i>
+          </div>
         </div>
 
-        <div v-else class="col-4 p-0" style="height: 60vh">
+        <div v-else class="col-4 mb-4">
           <img
             :src="uploadedImage"
             class="img-fluid border border-3 rounded-4"
-            alt="Selected image"
+            alt="Uploaded image"
             style="width: 100%; height: 100%; object-fit: cover"
           />
         </div>
@@ -63,24 +72,29 @@
       <div v-if="numberOfUploadedImagesByUser > 0 && !isLoggedOff">
         <h1 class="mt-5 fs-1 fw-bold text-dark">Uploaded images</h1>
         <p class="mt-2 mb-0 text-dark-emphasis">
-          You can use one of the images you uploaded earlier for prediction. Just click on the image to select it and then click the predict button.
+          You can use one of the images you uploaded earlier for prediction.
+          Just click on the image to select it and then click the predict
+          button.
         </p>
 
-        <div class="row mt-3 gx-5">
+        <div class="row mt-5">
           <div
             v-for="image in uploadedImagesByUser"
             :key="image.image_id"
-            class="col-4"
+            class="col-4 mb-4"
           >
-            <div class="mt-5" style="height: 50vh">
-              <img
-                @click="getSelectedImage(image.getImage)"
-                :src="image.getImage"
-                class="img-fluid border border-3 rounded-4"
-                alt="Selected image"
-                style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;"
-              />
-            </div>
+            <img
+              @click="getSelectedImage(image.getImage)"
+              :src="image.getImage"
+              class="img-fluid border border-3 rounded-4"
+              alt="Patient image"
+              style="
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                cursor: pointer;
+              "
+            />
           </div>
         </div>
       </div>
@@ -139,6 +153,7 @@ export default {
         })
         .then((response) => {
           console.log(response);
+          this.getNumberOfUploadedImages();
           this.getUploadedImages();
         })
         .catch((error) => {
@@ -214,7 +229,7 @@ export default {
         .catch((error) => {
           console.log(error);
         });
-    }
+    },
   },
   created() {
     this.$store.commit("setSelectedNavbarItem", "predict");
