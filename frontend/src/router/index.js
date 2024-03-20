@@ -6,6 +6,7 @@ import ActivateAccountView from '@/views/ActivateAccountView.vue'
 import ResetPasswordView from '@/views/ResetPasswordView.vue'
 import ResetPasswordConfirmationView from '@/views/ResetPasswordConfirmationView.vue'
 import PredictView from '@/views/PredictView.vue'
+import GalleryView from '@/views/GalleryView.vue'
 
 const routes = [
   {
@@ -42,6 +43,11 @@ const routes = [
     path: '/predict',
     name: 'predict',
     component: PredictView
+  },
+  {
+    path: '/gallery',
+    name: 'gallery',
+    component: GalleryView
   }
 ]
 

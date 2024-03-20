@@ -119,7 +119,7 @@ export default {
       HOME_PAGE: "home",
       PREDICT_PAGE: "predict",
       GALLERY_PAGE: "gallery",
-      REPORT_PAGE: "favourites",
+      REPORT_PAGE: "report",
       NONE: "",
     };
   },

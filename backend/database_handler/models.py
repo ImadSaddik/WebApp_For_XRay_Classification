@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
+
 class UserAccountManager(BaseUserManager):
     def create_user(self, email, name, password=None):
         if not email:
@@ -31,3 +32,19 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     
     def __str__(self):
         return self.email
+    
+    
+class PatientImage(models.Model):
+    image_id = models.AutoField(primary_key=True)
+    image = models.ImageField(null=False, upload_to='images/')
+    user = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
+    classification = models.CharField(max_length=255, null=True)
+    
+    def __str__(self):
+        return self.user.name + ' ' + str(self.image)
+    
+    def getImage(self):
+        return f'http://localhost:8000{self.image.url}' if self.image else ''
+    
+    class Meta:
+        ordering = ['image_id']
