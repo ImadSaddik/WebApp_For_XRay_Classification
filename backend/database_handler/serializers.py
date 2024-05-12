@@ -18,4 +18,5 @@ class PatientImageSerializer(serializers.ModelSerializer):
             "image_id",
             "classification",
             "getImage",
+            "user_id"
         )

@@ -24,7 +24,11 @@
                 It's easy, simple, effective, and reliable
               </p>
               <div class="text-center mt-5">
-                <button type="button" class="custom-button-light">Start now</button>
+                <router-link to="/predict">
+                  <button type="button" class="custom-button-light">
+                    Start now
+                  </button>
+                </router-link>
               </div>
             </div>
           </div>

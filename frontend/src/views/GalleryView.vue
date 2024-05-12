@@ -20,6 +20,7 @@
             class="col-4 mb-4"
           >
             <img
+              @click="navigateToImageDetailsPage(image)"
               :src="image.getImage"
               class="img-fluid border border-3 rounded-4"
               alt="Uploaded image"
@@ -88,6 +89,10 @@ export default {
           console.log(error);
         });
     },
+    navigateToImageDetailsPage(image) {
+      localStorage.setItem("selected_patient_image", JSON.stringify(image));
+      this.$router.push("/image_details");
+    }
   },
   created() {
     this.$store.commit("setSelectedNavbarItem", "gallery");

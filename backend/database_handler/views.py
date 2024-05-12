@@ -10,7 +10,6 @@ from PIL import Image
 from urllib.parse import urlparse
 
 from django.http import JsonResponse
-from django.db.models import F, Q, Count, OuterRef, Subquery
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -33,7 +32,7 @@ def addImage(request):
     patientImage = PatientImage.objects.create(image=imageMediaPath, user=user)
     patientImage.save()
     
-    return JsonResponse({'message': 'The object was successfully created!'})
+    return JsonResponse({'image_id': patientImage.image_id})
 
 
 def getPilImage(request):
@@ -65,7 +64,7 @@ class getImagesForUser(APIView):
         email = data['email']
         
         user = UserAccount.objects.get(email=email)
-        images = PatientImage.objects.filter(user=user)
+        images = PatientImage.objects.filter(user=user).order_by('-image_id')
         serializer = PatientImageSerializer(images, many=True)
         
         return Response(serializer.data)
@@ -95,4 +94,28 @@ def convertPilToUri(pilImage):
     data_uri = base64.b64encode(buffered.getvalue()).decode()
     
     return f"data:image/jpeg;base64,{data_uri}"
-            
+
+
+@api_view(['POST'])
+def deleteImage(request):
+    data = json.loads(request.body)
+    imageId = data['image_id']
+    
+    image = PatientImage.objects.get(image_id=imageId)
+    image.delete()
+    
+    return JsonResponse({'message': 'The object was successfully deleted!'})
+
+
+@api_view(['POST'])
+def setPredictedClass(request):
+    data = json.loads(request.body)
+    imageId = data['image_id']
+    predictedClass = data['predicted_class']
+    
+    image = PatientImage.objects.get(image_id=imageId)
+    image.classification = predictedClass
+    image.save()
+    
+    return JsonResponse({'message': 'The predicted class was successfully set!'})
+    

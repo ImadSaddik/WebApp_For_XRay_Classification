@@ -7,6 +7,9 @@ import ResetPasswordView from '@/views/ResetPasswordView.vue'
 import ResetPasswordConfirmationView from '@/views/ResetPasswordConfirmationView.vue'
 import PredictView from '@/views/PredictView.vue'
 import GalleryView from '@/views/GalleryView.vue'
+import ImageDetailsView from '@/views/ImageDetailsView.vue'
+import ReportView from '@/views/ReportView.vue'
+
 
 const routes = [
   {
@@ -48,6 +51,16 @@ const routes = [
     path: '/gallery',
     name: 'gallery',
     component: GalleryView
+  },
+  {
+    path: '/image_details',
+    name: 'image_details',
+    component: ImageDetailsView
+  },
+  {
+    path: '/report',
+    name: 'report',
+    component: ReportView
   }
 ]
 

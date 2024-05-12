@@ -7,4 +7,6 @@ urlpatterns = [
     path("getImageCountForUser/", views.getImageCountForUser),
     path("getImagesForUser/", views.getImagesForUser.as_view()),
     path("getImageFromUrl/", views.getImageFromUrl),
+    path("deleteImage/", views.deleteImage),
+    path("setPredictedClass/", views.setPredictedClass),
 ]

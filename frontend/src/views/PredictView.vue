@@ -1,6 +1,17 @@
 <template>
   <section class="container">
     <div class="px-5 my-5">
+      <div v-if="showPopup" class="alert alert-success alert-dismissible fade show popup" role="alert">
+        <strong>Success!</strong> The image is now used in the prediction.
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+          @click="showPopup = false"
+        ></button>
+      </div>
+
       <h1 class="fs-1 fw-bold text-dark">Classify your image</h1>
       <p v-if="!isLoggedOff" class="mt-3 text-dark-emphasis">
         To get started, upload an image and click the predict button. The
@@ -26,7 +37,7 @@
               src="../assets/white_background.jpeg"
               class="img-fluid rounded-4"
               alt="Uploaded image"
-              style="width: 100%; height: 100%; object-fit: cover;"
+              style="width: 100%; height: 100%; object-fit: cover"
             />
           </div>
           <div class="position-absolute top-50 start-50 translate-middle">
@@ -61,16 +72,46 @@
               </button>
             </div>
             <div class="col pe-0">
-              <button class="custom-button-dark" style="width: 100%">
+              <button
+                class="custom-button-dark"
+                style="width: 100%"
+                @click="predictImage"
+              >
                 Predict
               </button>
             </div>
           </div>
         </div>
+
+        <div class="col mt-5">
+          <div
+            v-if="predicted_class"
+            class="alert alert-secondary alert-dismissible fade show"
+            role="alert"
+          >
+            <h4 class="alert-heading">Prediction</h4>
+            <p>
+              The predicted class for the uploaded image is
+              <strong>{{ predicted_class }}</strong
+              >.
+            </p>
+
+            <router-link to="/report">
+              <button class="custom-button-dark">Show report</button>
+            </router-link>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+              @click="predicted_class = null"
+            ></button>
+          </div>
+        </div>
       </div>
 
       <div v-if="numberOfUploadedImagesByUser > 0 && !isLoggedOff">
-        <h1 class="mt-5 fs-1 fw-bold text-dark">Uploaded images</h1>
+        <h1 class="mt-3 fs-1 fw-bold text-dark">Uploaded images</h1>
         <p class="mt-2 mb-0 text-dark-emphasis">
           You can use one of the images you uploaded earlier for prediction.
           Just click on the image to select it and then click the predict
@@ -118,6 +159,9 @@ export default {
       imageUploaded: false,
       numberOfUploadedImagesByUser: 0,
       uploadedImagesByUser: [],
+      predicted_class: null,
+      image_id: null,
+      showPopup: false,
     };
   },
   methods: {
@@ -152,7 +196,9 @@ export default {
           },
         })
         .then((response) => {
-          console.log(response);
+          this.image_id = response.data.image_id;
+          console.log(response.data);
+
           this.getNumberOfUploadedImages();
           this.getUploadedImages();
         })
@@ -225,6 +271,50 @@ export default {
         .then((response) => {
           this.uploadedImage = response.data.image;
           this.imageUploaded = true;
+
+          this.showPopup = true;
+          setTimeout(() => {
+            this.showPopup = false;
+          }, 3000);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async predictImage() {
+      const formData = new FormData();
+      formData.append("image", this.dataURItoBlob(this.uploadedImage));
+
+      await axios
+        .post("api/v1/inference/", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "X-CSRFToken": "csrftoken",
+          },
+        })
+        .then((response) => {
+          this.predicted_class = response.data.prediction;
+          this.setPredictedClass();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async setPredictedClass() {
+      const data = JSON.stringify({
+        image_id: this.image_id,
+        predicted_class: this.predicted_class,
+      });
+
+      await axios
+        .post("api/v1/setPredictedClass/", data, {
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "csrftoken",
+          },
+        })
+        .then((response) => {
+          console.log(response.data);
         })
         .catch((error) => {
           console.log(error);
@@ -242,3 +332,24 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.popup {
+  position: fixed;
+  margin-left: 25%;
+  bottom: 0;
+  left: 0;
+  width: 50%;
+  z-index: 1000;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
