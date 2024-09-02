@@ -1,7 +1,11 @@
 <template>
   <section class="container">
     <div class="px-5 my-5">
-      <div v-if="showPopup" class="alert alert-success alert-dismissible fade show popup" role="alert">
+      <div
+        v-if="showPopup"
+        class="alert alert-success alert-dismissible fade show popup"
+        role="alert"
+      >
         <strong>Success!</strong> The image is now used in the prediction.
         <button
           type="button"
@@ -83,6 +87,21 @@
           </div>
         </div>
 
+        <div
+          v-if="showSpinner"
+          class="col-4 mt-5 d-flex flex-column justify-content-center align-items-center"
+        >
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="mt-3 text-dark-emphasis">
+            Wait! The model is predicting
+            <span class="dot">.</span>
+            <span class="dot">.</span>
+            <span class="dot">.</span>
+          </p>
+        </div>
+
         <div class="col mt-5">
           <div
             v-if="predicted_class"
@@ -162,6 +181,7 @@ export default {
       predicted_class: null,
       image_id: null,
       showPopup: false,
+      showSpinner: false,
     };
   },
   methods: {
@@ -282,6 +302,7 @@ export default {
         });
     },
     async predictImage() {
+      this.showSpinner = true;
       const formData = new FormData();
       formData.append("image", this.dataURItoBlob(this.uploadedImage));
 
@@ -293,10 +314,12 @@ export default {
           },
         })
         .then((response) => {
+          this.showSpinner = false;
           this.predicted_class = response.data.prediction;
           this.setPredictedClass();
         })
         .catch((error) => {
+          this.showSpinner = false;
           console.log(error);
         });
     },
@@ -351,5 +374,35 @@ export default {
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
+}
+
+.dot {
+  animation-name: dot;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+}
+
+.dot:nth-child(1) {
+  animation-delay: calc(1s / 14);
+}
+
+.dot:nth-child(2) {
+  animation-delay: calc(4s / 14);
+}
+
+.dot:nth-child(3) {
+  animation-delay: calc(9s / 14);
+}
+
+@keyframes dot {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 </style>

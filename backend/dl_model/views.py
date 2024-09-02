@@ -10,14 +10,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from keras.applications.vgg19 import preprocess_input
-from .model_architecture import chexnet_model
-
-model = chexnet_model()
-
-base_dir = os.path.dirname(os.path.abspath(__file__))
-weights_path = os.path.join(base_dir, 'weights.h5')
-model.load_weights(weights_path)
 print('*'*50, 'Model loaded', '*'*50)
 
 class_mapping = {
@@ -34,15 +26,11 @@ def inference(request):
     image = getPilImage(request)
     image = image.resize((224, 224))
     
-    image = np.array(image)
-    image = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
-    image = preprocess_input(image)
+    image = np.array(image, dtype='float64')
+    image = np.expand_dims(image, axis=0)
+    image /= 255.
     
-    predictions = model.predict(image)
-    max_index = np.argmax(predictions)
-    predicted_class = class_mapping[max_index]
-    
-    return JsonResponse({'prediction': predicted_class})
+    return JsonResponse({'prediction': 0})
     
     
 def getPilImage(request):
