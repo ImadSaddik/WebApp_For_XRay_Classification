@@ -6,7 +6,7 @@
         to="/"
         @click="handleNavbarItemClick(HOME_PAGE)"
       >
-        <img src="../assets/apod_logo.svg" alt="" />
+        <!-- <img src="../assets/logo.svg" alt="" /> -->
       </router-link>
       <button
         class="navbar-toggler"

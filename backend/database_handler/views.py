@@ -9,7 +9,7 @@ from PIL import Image
 
 from urllib.parse import urlparse
 
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseServerError
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -60,14 +60,17 @@ def getImageCountForUser(request):
 
 class getImagesForUser(APIView):
     def post(self, request):
-        data = request.data
-        email = data['email']
-        
-        user = UserAccount.objects.get(email=email)
-        images = PatientImage.objects.filter(user=user).order_by('-image_id')
-        serializer = PatientImageSerializer(images, many=True)
-        
-        return Response(serializer.data)
+        try:
+            data = request.data
+            email = data['email']
+            
+            user = UserAccount.objects.get(email=email)
+            images = PatientImage.objects.filter(user=user).order_by('-image_id')
+            serializer = PatientImageSerializer(images, many=True)
+            
+            return Response(serializer.data)
+        except:
+            return HttpResponseServerError()
     
     
 @api_view(['POST'])

@@ -1,5 +1,6 @@
 import io
 import os
+import time
 
 import numpy as np
 from PIL import Image
@@ -29,8 +30,9 @@ def inference(request):
     image = np.array(image, dtype='float64')
     image = np.expand_dims(image, axis=0)
     image /= 255.
+    time.sleep(5)
     
-    return JsonResponse({'prediction': 0})
+    return JsonResponse({'prediction': class_mapping[0]})
     
     
 def getPilImage(request):
