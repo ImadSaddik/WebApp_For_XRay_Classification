@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 
 
 class UserAccountManager(BaseUserManager):
+    # To create simple user, use the following command:
+    # python manage.py createuser
     def create_user(self, email, name, password=None):
         if not email:
             raise ValueError('Users must have an email address')
@@ -13,6 +15,15 @@ class UserAccountManager(BaseUserManager):
         # hash the password
         user.set_password(password)
         user.save()
+        
+        return user
+    
+    # python manage.py createsuperuser
+    def create_superuser(self, email, name, password=None):
+        user = self.create_user(email, name, password)
+        user.is_staff = True
+        user.is_superuser = True
+        user.save(using=self._db)
         
         return user
 
